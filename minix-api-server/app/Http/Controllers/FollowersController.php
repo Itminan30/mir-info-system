@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Followers;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreFollowersRequest;
-use App\Http\Requests\UpdateFollowersRequest;
 use App\Models\Xusers;
 use Illuminate\Http\Request;
 

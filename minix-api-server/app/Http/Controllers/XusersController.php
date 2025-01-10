@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Xusers;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreXusersRequest;
-use App\Http\Requests\UpdateXusersRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
