@@ -10,10 +10,10 @@ class Posts extends Model
     /** @use HasFactory<\Database\Factories\PostsFactory> */
     use HasFactory;
 
-    protected $fillables = [
+    protected $fillable = [
         'user_name',
         'twitter_handle',
         'tweet_title',
-        'tweet_body',
+        'tweet_body'
     ];
 }

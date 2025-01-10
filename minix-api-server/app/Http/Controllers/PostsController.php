@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Posts;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StorePostsRequest;
-use App\Http\Requests\UpdatePostsRequest;
+use Illuminate\Http\Request;
 
 class PostsController extends Controller
 {
@@ -15,14 +14,32 @@ class PostsController extends Controller
     public function index()
     {
         //
+        return "ALL posts";
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePostsRequest $request)
+    public function store(Request $request)
     {
-        //
+        $request->validate([
+            'user_name' => 'required|string|max:255',
+            'twitter_handle' => 'required|string|max:255',
+            'tweet_title' => 'required|string',
+            'tweet_body' => 'required|string'
+        ]);
+
+        $newPost = Posts::create([
+            'user_name' => $request->user_name,
+            'twitter_handle' => $request->twitter_handle,
+            'tweet_title' => $request->tweet_title,
+            'tweet_body' => $request->tweet_body
+        ]);
+
+        return response()->json([
+            'message' => 'Post Created Successfully',
+            'post' => $newPost
+        ], 201);
     }
 
     /**
@@ -36,7 +53,7 @@ class PostsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePostsRequest $request, Posts $posts)
+    public function update(Request $request, Posts $posts)
     {
         //
     }

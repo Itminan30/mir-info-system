@@ -23,7 +23,7 @@ class XusersController extends Controller
      */
     public function store(Request $request)
     {
-        $fields = $request->validate([
+        $request->validate([
             'user_name' => 'required|string|max:255',
             'twitter_handle' => 'required|string|max:255|unique:xusers',
             'email' => 'required|email|unique:xusers',

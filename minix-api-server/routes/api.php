@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FollowersController;
+use App\Http\Controllers\PostsController;
 use App\Http\Controllers\XusersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -12,8 +13,11 @@ use Illuminate\Support\Facades\Route;
 // Route for user related activities
 Route::apiResource("xusers", XusersController::class);
 
-// Route for following related activites
+// Route for following related activities
 Route::apiResource("follow", FollowersController::class);
+
+// Route for post related activities
+Route::apiResource("post", PostsController::class);
 
 
 Route::get("/", function() {
