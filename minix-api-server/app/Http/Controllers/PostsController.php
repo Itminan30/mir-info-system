@@ -14,8 +14,7 @@ class PostsController extends Controller
      */
     public function index()
     {
-        //
-        return "ALL posts";
+        return Posts::all();
     }
 
     /**
@@ -48,6 +47,7 @@ class PostsController extends Controller
         ]);
 
         return response()->json([
+            'status' => 'success',
             'message' => 'Post Created Successfully',
             'post' => $newPost
         ], 201);
@@ -58,7 +58,7 @@ class PostsController extends Controller
      */
     public function show(Posts $posts)
     {
-        //
+        return $posts;
     }
 
     /**

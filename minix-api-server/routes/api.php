@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\FollowersController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\XusersController;
@@ -18,6 +19,9 @@ Route::apiResource("follow", FollowersController::class);
 
 // Route for post related activities
 Route::apiResource("post", PostsController::class);
+
+// Route for comment related activities
+Route::apiResource("comment", CommentsController::class);
 
 
 Route::get("/", function() {

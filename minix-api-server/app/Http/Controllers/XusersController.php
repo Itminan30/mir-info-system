@@ -40,6 +40,7 @@ class XusersController extends Controller
         ]);
 
         return response()->json([
+            'status' => 'success',
             'message' => 'User Created Successfully',
             'user' => $newUser
         ], 201);
@@ -50,7 +51,7 @@ class XusersController extends Controller
      */
     public function show(Xusers $xusers)
     {
-        //
+        
     }
 
     /**

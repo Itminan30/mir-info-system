@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Comments;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreCommentsRequest;
-use App\Http\Requests\UpdateCommentsRequest;
+use App\Models\Posts;
+use App\Models\Xusers;
+use Illuminate\Http\Request;
 
 class CommentsController extends Controller
 {
@@ -20,9 +21,40 @@ class CommentsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCommentsRequest $request)
+    public function store(Request $request)
     {
-        //
+        // Validating the fields
+        $fields = $request->validate([
+            'post_id' => 'required|int',
+            'user_name' => 'required|string',
+            'twitter_handle' => 'required|string',
+            'comment_body' => 'required|string'
+        ]);
+
+        // Check if the post exists
+        if (!(Posts::where('id', $request->post_id)->exists())) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Post not found'
+            ], 404);
+        }
+
+        // Check if the twitter_handle exists
+        if (!(Xusers::where('twitter_handle', $request->twitter_handle)->exists())) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        // Create the comment
+        Comments::create($fields);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Comment added successfully'
+        ], 201);
+
     }
 
     /**
@@ -36,7 +68,7 @@ class CommentsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCommentsRequest $request, Comments $comments)
+    public function update(Request $request, Comments $comments)
     {
         //
     }

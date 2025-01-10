@@ -61,7 +61,8 @@ class FollowersController extends Controller
         Followers::create($fields);
 
         return response()->json([
-            "message" => "Successfully Followed " . $request->following_handle
+            'status' => 'success',
+            'message' => 'Successfully Followed ' . $request->following_handle
         ], 201);
     }
 
