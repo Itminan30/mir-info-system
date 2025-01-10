@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Posts;
 use App\Http\Controllers\Controller;
+use App\Models\Xusers;
 use Illuminate\Http\Request;
 
 class PostsController extends Controller
@@ -22,6 +23,7 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
+        // Validating the fields
         $request->validate([
             'user_name' => 'required|string|max:255',
             'twitter_handle' => 'required|string|max:255',
@@ -29,6 +31,15 @@ class PostsController extends Controller
             'tweet_body' => 'required|string'
         ]);
 
+        // Check if the twitter_handle is incorrect
+        if (!(Xusers::where('twitter_handle', $request->twitter_handle)->exists())) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User doesn\'t exists'
+            ], 404);
+        }
+
+        // Creating post
         $newPost = Posts::create([
             'user_name' => $request->user_name,
             'twitter_handle' => $request->twitter_handle,
