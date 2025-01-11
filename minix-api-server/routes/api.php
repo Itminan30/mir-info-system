@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 // Route for user related activities
-Route::apiResource("xusers", XusersController::class);
+Route::post("xusers/user", [XusersController::class, 'show']);
+Route::apiResource("xusers", XusersController::class)->except(['show']);
 
 // Route for following related activities
 Route::apiResource("follow", FollowersController::class);

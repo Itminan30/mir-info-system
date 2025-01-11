@@ -49,9 +49,41 @@ class XusersController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Xusers $xusers)
+    public function show(Request $request)
     {
-        
+
+        // validating fields
+        $request->validate([
+            'email' => 'required|string',
+            'password' => 'required|string'
+        ]);
+
+        // Get user data from db
+        $userdata = Xusers::where('email', $request->email)->first();
+        if (!$userdata) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Email is not correct'
+            ], 404);
+        }
+
+        // Check if the password is corrrect
+        $hashresult = Hash::check($request->password, $userdata->password);
+        if ($hashresult === false) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Incorrect Password'
+            ], 401);
+        }
+
+        // Return user data through the api
+        $user = [
+            'id' => $userdata->id,
+            'user_name' => $userdata->user_name,
+            'twitter_handle' => $userdata->twitter_handle,
+            'email' => $userdata->email
+        ];
+        return response()->json($user, 200);
     }
 
     /**
