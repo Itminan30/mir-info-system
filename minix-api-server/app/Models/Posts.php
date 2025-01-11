@@ -16,4 +16,10 @@ class Posts extends Model
         'tweet_title',
         'tweet_body'
     ];
+
+    // Connect with the xusers table with posts table
+    public function user()
+    {
+        return $this->belongsTo(XUsers::class, 'twitter_handle', 'twitter_handle');
+    }
 }

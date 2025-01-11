@@ -56,9 +56,31 @@ class PostsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Posts $posts)
+    public function show($search_term)
     {
-        return $posts;
+        // Using the search term to find matches in title or body
+        $posts = Posts::where('tweet_title', 'LIKE', '%' . $search_term . '%')
+            ->orWhere('tweet_body', 'LIKE', '%' . $search_term . '%')
+            ->with(['user']) // Include user information
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Checking if no post matches with the searched terms
+        if ($posts->isEmpty()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'No posts found matching your search',
+                'data' => []
+            ]);
+        }
+
+        // Return the search results
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Posts found',
+            'count' => $posts->count(),
+            'data' => $posts
+        ]);
     }
 
     /**
