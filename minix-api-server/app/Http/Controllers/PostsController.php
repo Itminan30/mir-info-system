@@ -148,8 +148,50 @@ class PostsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Posts $posts)
+    public function destroy(Request $request)
     {
-        //
+        // Validate the fields
+        $request->validate([
+            'post_id' => 'required|int',
+            'twitter_handle' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
+        // Find the user by twitter_handle
+        $user = XUsers::where('twitter_handle', $request->twitter_handle)->first();
+
+        // Check if user exists
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        // Verify the password
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Password incorrect',
+            ], 401);
+        }
+
+        // Find the post by ID and ensure it belongs to the user
+        $post = Posts::where('id', $request->post_id)->where('twitter_handle', $request->twitter_handle)->first();
+
+        if (!$post) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Post not found or does not belong to the user',
+            ], 404);
+        }
+
+        // Delete the post
+        $post->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Post deleted successfully',
+        ], 200);
     }
 }

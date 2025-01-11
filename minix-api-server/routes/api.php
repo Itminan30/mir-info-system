@@ -23,7 +23,8 @@ Route::apiResource("follow", FollowersController::class)->except(['show', 'destr
 
 // Route for post related activities
 Route::get("post/{search_term}", [PostsController::class, 'show']);
-Route::apiResource("post", PostsController::class)->except(['show']);
+Route::delete("post/delete", [PostsController::class, 'destroy']);
+Route::apiResource("post", PostsController::class)->except(['show', 'destroy']);
 
 // Route for comment related activities
 Route::apiResource("comment", CommentsController::class);
