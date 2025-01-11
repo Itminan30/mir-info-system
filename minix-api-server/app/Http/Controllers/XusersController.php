@@ -109,7 +109,7 @@ class XusersController extends Controller
 
         // Check if the password is correct
         $hashresult = Hash::check($request->password, $olduser->password);
-        if($hashresult === false) {
+        if ($hashresult === false) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Incorrect password'
@@ -131,8 +131,38 @@ class XusersController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Xusers $xusers)
+    public function destroy(Request $request)
     {
-        //
+        // Validate the fields
+        $request->validate([
+            'twitter_handle' => 'required|string|max:255',
+            'password' => 'required|string'
+        ]);
+
+        // Check if the user exists
+        $user = Xusers::where('twitter_handle', $request->twitter_handle)->first();
+        if (!($user)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User account not found'
+            ], 404);
+        }
+
+        // Check if the password is correct
+        $hashresult = Hash::check($request->password, $user->password);
+        if ($hashresult === false) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Incorrect password'
+            ], 401);
+        }
+
+        // delete the user
+        $user->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'User deleted successfully'
+        ], 200);
     }
 }

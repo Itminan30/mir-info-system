@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Route;
 
 // Route for user related activities
 Route::post("xusers/user", [XusersController::class, 'show']);
-Route::apiResource("xusers", XusersController::class)->except(['show']);
+Route::delete("xusers/delete", [XusersController::class, 'destroy']);
+Route::apiResource("xusers", XusersController::class)->except(['show', 'destroy']);
 
 // Route for following related activities
 Route::apiResource("follow", FollowersController::class);
