@@ -1,9 +1,17 @@
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
+import { useAuth } from "../../layout/AuthProvider";
 
 const Navigation = () => {
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate("/");
+    }
 
     return (
-        <div className="navbar bg-base-200">
+        <div className="navbar bg-base-300">
             <div className="navbar-start">
                 <div className="dropdown">
                     <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -23,8 +31,8 @@ const Navigation = () => {
                     <ul
                         tabIndex={0}
                         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                        <NavLink><a>Item 1</a></NavLink>
-                        <NavLink><a>Item 3</a></NavLink>
+                        <li><a>Item 1</a></li>
+                        <li><a>Item 3</a></li>
                     </ul>
                 </div>
                 <NavLink to="/" className="btn btn-ghost text-xl">Mini X</NavLink>
@@ -38,15 +46,20 @@ const Navigation = () => {
             </div>
             <div className="navbar-end">
                 <ul className="menu menu-horizontal px-1">
-                    <li>
-                        <details>
-                            <summary>Parent</summary>
-                            <ul className="p-2">
+                    {
+                        user ?
+                            (
+                                <div className="dropdown dropdown-bottom dropdown-end dropdown-hover">
+                                    <div tabIndex={0} role="button" className="btn m-1">{user?.twitter_handle}</div>
+                                    <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                                        <li><a onClick={handleLogout}>Logout</a></li>
+                                    </ul>
+                                </div>
+                            ) :
+                            (
                                 <li><NavLink to="/login">Login</NavLink></li>
-                                <li><NavLink to="/register">Register</NavLink></li>
-                            </ul>
-                        </details>
-                    </li>
+                            )
+                    }
                 </ul>
             </div>
         </div>

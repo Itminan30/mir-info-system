@@ -17,7 +17,7 @@ const Login = () => {
         const password = form.password.value;
 
         try {
-            const response = await fetch("http://127.0.0.1:8000/api/xusers/user", {
+            const response = await fetch(`${import.meta.env.VITE_API_LINK}/xusers/user`, {
                 method: "POST",
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify({ email, password })
@@ -57,13 +57,10 @@ const Login = () => {
                                     <span className="label-text">Password</span>
                                 </label>
                                 <input type="password" placeholder="password" name="password" required className="input input-bordered" />
-                                <label className="label">
-                                    <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
-                                </label>
                                 <span className="label-text-alt p-1 text-error">{logError}</span>
                             </div>
                             <div className="form-control mt-1 p-1">
-                                <small>New to Lego Wonderland!? <Link className="text-[#799eb0] font-bold" to="/register">Register</Link></small>
+                                <small>New to Mini X? <Link className="text-[#799eb0] font-bold" to="/register">Register</Link></small>
                             </div>
                             <div className="form-control mt-5">
                                 <input className="btn bg-[#799eb0]" value="Login" type="submit" />
