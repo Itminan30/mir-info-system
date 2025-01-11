@@ -22,4 +22,9 @@ class Posts extends Model
     {
         return $this->belongsTo(XUsers::class, 'twitter_handle', 'twitter_handle');
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comments::class, 'post_id', 'id');
+    }
 }

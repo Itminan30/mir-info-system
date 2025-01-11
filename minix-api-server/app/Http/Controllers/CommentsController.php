@@ -54,15 +54,34 @@ class CommentsController extends Controller
             'status' => 'success',
             'message' => 'Comment added successfully'
         ], 201);
-
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Comments $comments)
+    public function show(Request $request)
     {
-        //
+        $post_id = (int) $request->post_id;
+
+        // Find the post by ID
+        $post = Posts::find($post_id);
+
+        // Check if the post exists
+        if (!$post) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Post not found',
+            ], 404);
+        }
+
+        // Fetch all comments for the post
+        $comments = $post->comments;
+
+        return response()->json([
+            'status' => 'success',
+            'post_id' => $post_id,
+            'comments' => $comments,
+        ], 200);
     }
 
     /**

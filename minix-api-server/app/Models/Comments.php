@@ -16,4 +16,9 @@ class Comments extends Model
         'twitter_handle',
         'comment_body'
     ];
+
+    public function post()
+    {
+        return $this->belongsTo(Posts::class, 'post_id', 'id');
+    }
 }

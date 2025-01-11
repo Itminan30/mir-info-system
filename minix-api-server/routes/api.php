@@ -27,7 +27,8 @@ Route::delete("post/delete", [PostsController::class, 'destroy']);
 Route::apiResource("post", PostsController::class)->except(['show', 'destroy']);
 
 // Route for comment related activities
-Route::apiResource("comment", CommentsController::class);
+Route::get("comment/{post_id}", [CommentsController::class, 'show']);
+Route::apiResource("comment", CommentsController::class)->except(['show']);
 
 
 Route::get("/", function () {
