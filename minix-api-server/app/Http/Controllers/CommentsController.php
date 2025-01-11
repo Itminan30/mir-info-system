@@ -95,8 +95,34 @@ class CommentsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comments $comments)
+    public function destroy(Request $request, $comment_id)
     {
-        //
+        // Validate the fields
+        $request->validate([
+            'twitter_handle' => 'required|string',
+            'post_id' => 'required|integer',
+        ]);
+
+        // Find the comment by ID, post_id, and twitter_handle
+        $comment = Comments::where('id', $comment_id)
+            ->where('post_id', $request->post_id)
+            ->where('twitter_handle', $request->twitter_handle)
+            ->first();
+
+        // Check if the comment exists
+        if (!$comment) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Comment not found or does not belong to the user',
+            ], 404);
+        }
+
+        // Delete the comment
+        $comment->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Comment deleted successfully',
+        ], 200);
     }
 }
