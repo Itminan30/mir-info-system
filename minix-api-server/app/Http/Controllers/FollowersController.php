@@ -81,27 +81,43 @@ class FollowersController extends Controller
             ], 404);
         }
 
+        // Get the followeings of an account
         $following = Followers::where('follower_handle', $handle)
             ->join('xusers', 'xusers.twitter_handle', '=', 'followers.following_handle')
             ->select('xusers.user_name', 'xusers.twitter_handle')
             ->get();
-        
+
         return response()->json($following, 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Followers $followers)
-    {
-        //
-    }
+    public function update(Request $request, Followers $followers) {}
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Followers $followers)
+    public function destroy($follower_handle, $following_handle)
     {
-        //
+        // Find and delete the follow relationship
+        $follow = Followers::where('follower_handle', $follower_handle)
+            ->where('following_handle', $following_handle)
+            ->first();
+
+        if (!$follow) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Follow relationship not found'
+            ], 404);
+        }
+
+        // Unfollow the following account
+        $follow->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Successfully unfollowed ' . $following_handle
+        ]);
     }
 }
