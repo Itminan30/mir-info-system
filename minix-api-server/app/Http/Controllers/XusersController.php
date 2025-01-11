@@ -89,9 +89,43 @@ class XusersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Xusers $xusers)
+    public function update(Request $request, $handle)
     {
-        //
+        // Validating fields - user can either change username or password
+        $request->validate([
+            'user_name' => 'sometimes|string|max:255',
+            'password' => 'required|string|min:8',
+            'new_password' => 'sometimes|string|min:8'
+        ]);
+
+        // Check if the account exists
+        $olduser = Xusers::where('twitter_handle', $handle)->first();
+        if (!($olduser)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Account Not Found'
+            ], 404);
+        }
+
+        // Check if the password is correct
+        $hashresult = Hash::check($request->password, $olduser->password);
+        if($hashresult === false) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Incorrect password'
+            ], 401);
+        }
+
+        // update the user data
+        $olduser->update([
+            'user_name' => $request->user_name ?? $olduser->user_name,
+            'password' => $request->new_password ? Hash::make($request->new_password) : $olduser->password
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Account updated successfully'
+        ], 200);
     }
 
     /**
