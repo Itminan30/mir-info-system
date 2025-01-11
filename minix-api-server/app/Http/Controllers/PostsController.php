@@ -6,6 +6,7 @@ use App\Models\Posts;
 use App\Http\Controllers\Controller;
 use App\Models\Xusers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class PostsController extends Controller
 {
@@ -86,9 +87,62 @@ class PostsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Posts $posts)
+    public function update(Request $request, $handle)
     {
-        //
+        // Validate fields
+        $request->validate([
+            'post_id' => 'required|int',
+            'password' => 'required|string',
+            'tweet_title' => 'required|string',
+            'tweet_body' => 'required|string'
+        ]);
+
+        // Check if the account exists
+        $user = Xusers::where('twitter_handle', $handle)->first();
+        if (!($user)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Account Not Found'
+            ], 404);
+        }
+
+        // find the post
+        $post = Posts::where('id', $request->post_id)->first();
+        if (!($post)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Post not found'
+            ], 404);
+        }
+
+        // Check if the owner of the post is trying to edit the post
+        if ($post->twitter_handle !== $handle) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Don\'t have access to edit the post'
+            ], 401);
+        }
+
+        // Check if the password is correct
+        $hashresult = Hash::check($request->password, $user->password);
+        if ($hashresult === false) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Incorrect password'
+            ], 401);
+        }
+
+        // update the post
+        $post->update([
+            'tweet_title' => $request->tweet_title,
+            'tweet_body' => $request->tweet_body
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Post updated successfully',
+            'post' => $post
+        ], 200);
     }
 
     /**
