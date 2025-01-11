@@ -7,18 +7,21 @@ import AllPosts from './pages/AllPosts/AllPosts.jsx'
 import MyPosts from './pages/MyPosts/MyPosts.jsx'
 import Login from './pages/Login/Login.jsx'
 import Register from './pages/Register/Register.jsx'
+import { AuthProvider } from './layout/AuthProvider.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<Homepage />} >
-          <Route index element={<AllPosts />} />
-          <Route path='myposts/:handle' element={<MyPosts />} />
-          <Route path='login' element={<Login />} />
-          <Route path='register' element={<Register />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  </StrictMode>,
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<Homepage />} >
+            <Route index element={<AllPosts />} />
+            <Route path='myposts/:handle' element={<MyPosts />} />
+            <Route path='login' element={<Login />} />
+            <Route path='register' element={<Register />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  </StrictMode >,
 )
