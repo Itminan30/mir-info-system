@@ -15,7 +15,7 @@ class XusersController extends Controller
     public function index()
     {
         //
-        return Xusers::all();
+        return Xusers::all()->makeHidden(['password']);
     }
 
     /**

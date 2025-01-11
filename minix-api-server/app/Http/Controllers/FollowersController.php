@@ -69,9 +69,24 @@ class FollowersController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Followers $followers)
+    public function show($handle)
     {
-        //
+        // Check if the user account exists
+        $user = Xusers::where('twitter_handle', $handle)->first();
+
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        $following = Followers::where('follower_handle', $handle)
+            ->join('xusers', 'xusers.twitter_handle', '=', 'followers.following_handle')
+            ->select('xusers.user_name', 'xusers.twitter_handle')
+            ->get();
+        
+        return response()->json($following, 200);
     }
 
     /**
