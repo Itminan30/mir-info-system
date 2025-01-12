@@ -108,6 +108,27 @@ const AllPosts = () => {
         }
     }
 
+    // delete comment
+    const deletecomment = async (id, post_id) => {
+        const twitter_handle = user?.twitter_handle;
+
+        const response = await fetch(`${import.meta.env.VITE_API_LINK}/comment/${id}`, {
+            method: "DELETE",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ post_id, twitter_handle })
+        })
+
+        const data = await response.json();
+
+        if (data.status === "success") {
+            const newCommentList = comments.filter(comment => comment.id !== id);
+            setComments(newCommentList);
+        }
+        else {
+            console.log(data.message);
+        }
+    }
+
     console.log(posts);
     console.log(comments);
     return (
@@ -189,9 +210,20 @@ const AllPosts = () => {
                                                 comments.length !== 0 ?
                                                     (
                                                         comments.map(comment => (
-                                                            <div key={comment.id} className="py-2">
-                                                                <p className="text-gray-800 text-base">{comment.comment_body}</p>
-                                                                <p className="text-gray-600 text-xs">by {comment.twitter_handle}</p>
+                                                            <div key={comment.id} className="py-2 flex justify-between">
+                                                                <div>
+                                                                    <p className="text-gray-800 text-base">{comment.comment_body}</p>
+                                                                    <p className="text-gray-600 text-xs">by {comment.twitter_handle}</p>
+                                                                </div>
+                                                                {
+                                                                    user && user.twitter_handle === comment.twitter_handle &&
+                                                                    (
+                                                                        <div>
+                                                                            <button onClick={() => deletecomment(comment.id, post.id)} className="btn btn-error btn-sm">Delete</button>
+                                                                        </div>
+                                                                    )
+                                                                }
+
                                                             </div>
                                                         ))
                                                     ) :
