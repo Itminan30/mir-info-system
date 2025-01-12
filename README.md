@@ -23,8 +23,8 @@ Mini X is a miniature Twitter application where users can:
 
 ## Features
 - User authentication (Sign up/Sign in)
-- Posting and managing tweets
-- Following and interacting with other users
+- Posting and Editing tweets
+- Following other users
 - Commenting on tweets
 
 ---
