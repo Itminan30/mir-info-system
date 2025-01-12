@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
+import { useAuth } from "../../layout/AuthProvider";
 
 const AllPosts = () => {
     // User Info
-    
+    const { user } = useAuth();
 
     // States
     const [posts, setPosts] = useState([]);
     const [comments, setComments] = useState([]);
+    const [following, setFollowing] = useState(false);
 
     // Effect for getting all the posts
     useEffect(() => {
@@ -21,11 +23,19 @@ const AllPosts = () => {
     }, [])
 
     // Method for getting post comments
-    const getcomments = async (post_id) => {
+    const getCommentsFollows = async (post_id, twitter_handle) => {
         const response = await fetch(`${import.meta.env.VITE_API_LINK}/comment/${post_id}`);
         const data = await response.json();
-
         setComments(data.comments);
+
+        if (user) {
+            const followresponse = await fetch(`${import.meta.env.VITE_API_LINK}/follow/${user?.twitter_handle}/${twitter_handle}`)
+            const followingdata = await followresponse.json();
+
+            if (followingdata.message === "following") {
+                setFollowing(true);
+            }
+        }
     }
 
     console.log(posts);
@@ -45,11 +55,52 @@ const AllPosts = () => {
                                 {/* You can open the modal using document.getElementById('ID').showModal() method */}
                                 <button
                                     className="btn"
-                                    onClick={() => { document.getElementById(`${post.id}`).showModal(); getcomments(post.id) }}>
+                                    onClick={() => { document.getElementById(`${post.id}`).showModal(); getCommentsFollows(post.id, post.twitter_handle) }}>
                                     See Details
                                 </button>
                                 <dialog id={post.id} className="modal">
                                     <div className="modal-box w-11/12 max-w-5xl">
+                                        {/* Show post details */}
+                                        <div>
+                                            <div>
+                                                <div className="flex justify-between">
+                                                    <div className="mb-3">
+                                                        <h2 className="text-sm font-bold text-gray-600">
+                                                            {post.tweet_title}
+                                                        </h2>
+                                                        <p>
+                                                            by {post.user_name} - {post.twitter_handle}
+                                                        </p>
+                                                    </div>
+                                                    {
+                                                        (user) && (user?.twitter_handle !== post.twitter_handle ? (
+                                                            following ?
+                                                                (
+                                                                    (<button className="btn">
+                                                                        Unfollow
+                                                                    </button>)
+                                                                ) : (
+                                                                    (<button className="btn">
+                                                                        Follow
+                                                                    </button>)
+                                                                )
+                                                        ) : (
+                                                            <>
+                                                            </>
+                                                        ))
+
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <p className="text-lg font-semibold">
+                                                    {post.tweet_body}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div className="divider"></div>
+                                        {/* Show Comments of a post */}
                                         <h3 className="font-bold text-lg">Comments</h3>
                                         <div>
                                             {
@@ -74,10 +125,10 @@ const AllPosts = () => {
                                 </dialog>
                             </div>
                         </div>
-                    </div>
+                    </div >
                 ))
             }
-        </div>
+        </div >
     );
 };
 

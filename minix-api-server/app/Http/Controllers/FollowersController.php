@@ -12,9 +12,25 @@ class FollowersController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($handle)
     {
-        //
+        // Check if the user account exists
+        $user = Xusers::where('twitter_handle', $handle)->first();
+
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        // Get the followeings of an account
+        $following = Followers::where('follower_handle', $handle)
+            ->join('xusers', 'xusers.twitter_handle', '=', 'followers.following_handle')
+            ->select('xusers.user_name', 'xusers.twitter_handle')
+            ->get();
+
+        return response()->json($following, 200);
     }
 
     /**
@@ -69,25 +85,22 @@ class FollowersController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($handle)
+    public function show($follower, $following)
     {
-        // Check if the user account exists
-        $user = Xusers::where('twitter_handle', $handle)->first();
+        $followstate = Followers::where('follower_handle', $follower)
+            ->where('following_handle', $following)->first();
 
-        if (!$user) {
+        if ($followstate) {
             return response()->json([
-                'status' => 'error',
-                'message' => 'User not found'
-            ], 404);
+                'status' => 'success',
+                'message' => 'following'
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'not following'
+            ], 200);
         }
-
-        // Get the followeings of an account
-        $following = Followers::where('follower_handle', $handle)
-            ->join('xusers', 'xusers.twitter_handle', '=', 'followers.following_handle')
-            ->select('xusers.user_name', 'xusers.twitter_handle')
-            ->get();
-
-        return response()->json($following, 200);
     }
 
     /**

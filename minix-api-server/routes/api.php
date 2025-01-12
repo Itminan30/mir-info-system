@@ -12,9 +12,10 @@ Route::delete("xusers/delete", [XusersController::class, 'destroy']);
 Route::apiResource("xusers", XusersController::class)->except(['show', 'destroy']);
 
 // Route for following related activities
-Route::get("follow/{handle}", [FollowersController::class, 'show']);
+Route::get("follow/{handle}", [FollowersController::class, 'index']);
+Route::get("follow/{follower}/{following}", [FollowersController::class, 'show']);
 Route::delete("follow/{follower_handle}/{following_handle}", [FollowersController::class, 'destroy']);
-Route::apiResource("follow", FollowersController::class)->except(['show', 'destroy']);
+Route::apiResource("follow", FollowersController::class)->except(['index', 'show', 'destroy']);
 
 // Route for post related activities
 Route::get("post/{search_term}", [PostsController::class, 'show']);
