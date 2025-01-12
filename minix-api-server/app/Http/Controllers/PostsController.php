@@ -62,7 +62,7 @@ class PostsController extends Controller
             ->get();
 
         // Checking if user has no posts
-        if ($posts->empty()) {
+        if ($posts->isEmpty()) {
             return response()->json([
                 'status' => 'success',
                 'message' => 'No posts found matching your search',
