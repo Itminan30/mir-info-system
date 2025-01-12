@@ -31,17 +31,26 @@ const Navigation = () => {
                     <ul
                         tabIndex={0}
                         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                        <li><a>Item 1</a></li>
-                        <li><a>Item 3</a></li>
+                        <li><NavLink to="/">All Posts</NavLink></li>
+                        {
+                            user &&
+                            (
+                                <li><NavLink to={`/myposts/${user.twitter_handle}`}>My Posts</NavLink></li>
+                            )
+                        }
                     </ul>
                 </div>
                 <NavLink to="/" className="btn btn-ghost text-xl">Mini X</NavLink>
             </div>
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1">
-                    <li><NavLink>Item 1</NavLink></li>
-                    <li><NavLink>Item 3</NavLink></li>
-
+                    <li><NavLink to="/">All Posts</NavLink></li>
+                    {
+                        user &&
+                        (
+                            <li><NavLink to={`/myposts/${user.twitter_handle}`}>My Posts</NavLink></li>
+                        )
+                    }
                 </ul>
             </div>
             <div className="navbar-end">

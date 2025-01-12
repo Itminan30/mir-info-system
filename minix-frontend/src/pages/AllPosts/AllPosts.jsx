@@ -129,15 +129,13 @@ const AllPosts = () => {
         }
     }
 
-    console.log(posts);
-    console.log(comments);
     return (
-        <div>
+        <div className="min-h-screen grid grid-cols-1 md:grid-cols-3">
             {
                 posts.map(post => (
-                    <div key={post.id} className="card bg-base-100 w-96 shadow-xl">
+                    <div key={post.id} className="card h-fit bg-base-100 w-96 shadow-xl">
                         <div className="card-body">
-                            <div className="flex gap-3">
+                            <div className="flex gap-3 justify-between">
                                 <h2 className="card-title">{post.tweet_title}</h2>
                                 <h2>{post.twitter_handle}</h2>
                             </div>

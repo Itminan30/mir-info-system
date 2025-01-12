@@ -16,7 +16,11 @@ createRoot(document.getElementById('root')).render(
         <Routes>
           <Route path='/' element={<Homepage />} >
             <Route index element={<AllPosts />} />
-            <Route path='myposts/:handle' element={<MyPosts />} />
+            <Route
+              path='myposts/:handle'
+              element={<MyPosts />}
+              // loader={({ params }) => fetch(`${import.meta.env.VITE_API_LINK}/post/user/${params.handle}`)}
+            />
             <Route path='login' element={<Login />} />
             <Route path='register' element={<Register />} />
           </Route>
