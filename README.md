@@ -50,6 +50,7 @@ Mini X is a miniature Twitter application where users can:
    ```bash
    php artisan serve
    ```
+6. Backend server can be tested with the Postman collection provided in the resources folder. Import the collection in the postman app or VS code extension to test the backend server.
 
 ---
 
