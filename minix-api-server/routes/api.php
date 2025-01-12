@@ -18,6 +18,7 @@ Route::delete("follow/{follower_handle}/{following_handle}", [FollowersControlle
 Route::apiResource("follow", FollowersController::class)->except(['index', 'show', 'destroy']);
 
 // Route for post related activities
+Route::get("post/user/{twitter_handle}", [PostsController::class, 'userPosts']);
 Route::get("post/{search_term}", [PostsController::class, 'show']);
 Route::delete("post/delete", [PostsController::class, 'destroy']);
 Route::apiResource("post", PostsController::class)->except(['show', 'destroy']);

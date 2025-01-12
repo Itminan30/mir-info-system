@@ -54,6 +54,31 @@ class PostsController extends Controller
         ], 201);
     }
 
+    public function userPosts($twitter_handle)
+    {
+        // getting user specific all posts
+        $posts = Posts::where('twitter_handle', $twitter_handle)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Checking if user has no posts
+        if ($posts->empty()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'No posts found matching your search',
+                'data' => []
+            ], 200);
+        }
+
+        // Return all the posts of a user
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Posts found',
+            'count' => $posts->count(),
+            'data' => $posts
+        ], 200);
+    }
+
     /**
      * Display the specified resource.
      */
@@ -72,7 +97,7 @@ class PostsController extends Controller
                 'status' => 'success',
                 'message' => 'No posts found matching your search',
                 'data' => []
-            ]);
+            ], 200);
         }
 
         // Return the search results
@@ -81,7 +106,7 @@ class PostsController extends Controller
             'message' => 'Posts found',
             'count' => $posts->count(),
             'data' => $posts
-        ]);
+        ], 200);
     }
 
     /**
