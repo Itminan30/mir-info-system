@@ -48,11 +48,12 @@ class CommentsController extends Controller
         }
 
         // Create the comment
-        Comments::create($fields);
+        $newcomment = Comments::create($fields);
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Comment added successfully'
+            'message' => 'Comment added successfully',
+            'comment' => $newcomment
         ], 201);
     }
 

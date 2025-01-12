@@ -66,8 +66,42 @@ const AllPosts = () => {
 
         const data = await response.json();
 
-        if(data.status === "success") {
+        if (data.status === "success") {
             setFollowing(false);
+        }
+        else {
+            console.log(data.message);
+        }
+    }
+
+    // Add a comment
+    const addComment = async (event) => {
+        event.preventDefault();
+        const form = event.target;
+        const post_id = form.post_id.value;
+        const user_name = form.user_name.value;
+        const twitter_handle = form.twitter_handle.value;
+        const comment_body = form.comment_body.value;
+
+        console.log({
+            post_id,
+            user_name,
+            twitter_handle,
+            comment_body
+        });
+
+        const response = await fetch(`${import.meta.env.VITE_API_LINK}/comment`, {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ post_id, user_name, twitter_handle, comment_body })
+        })
+
+        const data = await response.json();
+
+        if (data.status === "success") {
+            const newComment = data.comment;
+            setComments([...comments, newComment])
+            form.reset();
         }
         else {
             console.log(data.message);
@@ -138,12 +172,27 @@ const AllPosts = () => {
                                         <div className="divider"></div>
                                         {/* Show Comments of a post */}
                                         <h3 className="font-bold text-lg">Comments</h3>
+                                        {
+                                            user &&
+                                            <div className="mt-3">
+                                                <form onSubmit={addComment}>
+                                                    <input type="text" placeholder="Add Comment" id="comment_body" name="comment_body" className="input input-bordered w-full max-w-xs" />
+                                                    <input type="hidden" name="post_id" value={post.id} />
+                                                    <input type="hidden" name="user_name" value={user.user_name} />
+                                                    <input type="hidden" name="twitter_handle" value={user.twitter_handle} />
+                                                    <button type="submit" className="btn btn-ghost">Submit</button>
+                                                </form>
+                                            </div>
+                                        }
                                         <div>
                                             {
                                                 comments.length !== 0 ?
                                                     (
                                                         comments.map(comment => (
-                                                            <p key={comment.id} className="py-2">{comment.comment_body}</p>
+                                                            <div key={comment.id} className="py-2">
+                                                                <p className="text-gray-800 text-base">{comment.comment_body}</p>
+                                                                <p className="text-gray-600 text-xs">by {comment.twitter_handle}</p>
+                                                            </div>
                                                         ))
                                                     ) :
                                                     (
