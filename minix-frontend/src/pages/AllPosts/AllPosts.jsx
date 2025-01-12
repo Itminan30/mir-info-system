@@ -38,6 +38,42 @@ const AllPosts = () => {
         }
     }
 
+    // Follow a user
+    const followUser = async (following_handle) => {
+        const follower_handle = user.twitter_handle;
+        const response = await fetch(`${import.meta.env.VITE_API_LINK}/follow`, {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ follower_handle, following_handle })
+        })
+
+        const data = await response.json()
+        if (data.status === "success") {
+            setFollowing(true);
+        }
+        else {
+            console.log(data.message);
+        }
+    }
+
+    // Unfollow a user
+    const unfollowUser = async (unfollowinghandle) => {
+        const response = await fetch(`${import.meta.env.VITE_API_LINK}/follow/${user.twitter_handle}/${unfollowinghandle}`, {
+            method: "DELETE",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(null)
+        })
+
+        const data = await response.json();
+
+        if(data.status === "success") {
+            setFollowing(false);
+        }
+        else {
+            console.log(data.message);
+        }
+    }
+
     console.log(posts);
     console.log(comments);
     return (
@@ -76,11 +112,11 @@ const AllPosts = () => {
                                                         (user) && (user?.twitter_handle !== post.twitter_handle ? (
                                                             following ?
                                                                 (
-                                                                    (<button className="btn">
+                                                                    (<button onClick={() => unfollowUser(post.twitter_handle)} className="btn">
                                                                         Unfollow
                                                                     </button>)
                                                                 ) : (
-                                                                    (<button className="btn">
+                                                                    (<button onClick={() => followUser(post.twitter_handle)} className="btn">
                                                                         Follow
                                                                     </button>)
                                                                 )
